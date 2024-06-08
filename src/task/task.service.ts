@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task, TaskStatus } from './task.entity';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,24 +14,26 @@ export class TaskService {
 
   getTaskById(id: string) {
     const allTasks = this.getAllTasks();
-    return allTasks.find((t) => t.id === id);
+    const task = allTasks.find((t) => t.id === id);
+    if (!task) {
+      throw new NotFoundException();
+    }
+    return task;
   }
 
   getFilteredTasks(filterOptions: GetFilteredTasks) {
-    const { title, description } = filterOptions;
+    const { search, status } = filterOptions;
     const allTasks = this.getAllTasks();
     const filteredTasks = [];
-    if (title) {
-      filteredTasks.push(
-        ...filteredTasks.filter((t) =>
-          t.title.toLowerCase().includes(title.toLowerCase()),
-        ),
-      );
+    if (status) {
+      filteredTasks.push(...filteredTasks.filter((t) => t.status === status));
     }
-    if (description) {
+    if (search) {
       filteredTasks.push(
-        ...allTasks.filter((t) =>
-          t.description.toLowerCase().includes(description.toLowerCase()),
+        ...allTasks.filter(
+          (t) =>
+            t.title.toLowerCase().includes(search.toLowerCase()) ||
+            t.description.toLowerCase().includes(search.toLowerCase()),
         ),
       );
     }
