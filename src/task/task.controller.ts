@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -24,8 +25,8 @@ export class TaskController {
   }
 
   @Get('/:id')
-  getTaskById(@Param('id') id: string) {
-    return this.taskService.getTaskById(id);
+  getTaskById(@Param('id', ParseIntPipe) id: number) {
+    return this.taskService.getTaskById({ id });
   }
 
   @Post()
@@ -35,7 +36,7 @@ export class TaskController {
 
   @Patch('/:id/status')
   updateTaskStatus(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateTaskStatusDto: UpdateTaskStatusDto,
   ) {
     return this.taskService.updatTaskStatus(id, updateTaskStatusDto.status);
