@@ -4,13 +4,13 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { User } from 'src/user/entities/user.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
-export class UserRepository extends Repository<User> {
+export class UserRepository extends Repository<UserEntity> {
   constructor(private dataSource: DataSource) {
-    super(User, dataSource.createEntityManager());
+    super(UserEntity, dataSource.createEntityManager());
   }
 
   async createUser(createUserDto: CreateUserDto) {

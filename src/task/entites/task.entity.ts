@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TaskStatus } from '../task.types';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 @Entity('tasks')
 export class Task {
@@ -18,4 +19,8 @@ export class Task {
     default: TaskStatus.PENDING,
   })
   status: TaskStatus;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @ManyToOne((_type) => UserEntity, (user) => user.task)
+  user: UserEntity;
 }
